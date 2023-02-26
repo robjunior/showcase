@@ -3,7 +3,7 @@
     "builds": [
       {
         "src": "db.json",
-        "use": "@now/json-server"
+        "use": "json-server"
       }
     ]
   }
