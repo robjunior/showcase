@@ -22,7 +22,7 @@
     "env": {
       "HOST": "0.0.0.0",
       "PORT": 3000,
-      "JSON_SERVER_WATCH": "api/db.json"
+      "JSON_SERVER_WATCH": "db.json"
     },
     "functions": { "api/**/*": true }
   }
