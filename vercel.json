@@ -3,7 +3,26 @@
     "builds": [
       {
         "src": "db.json",
-        "use": "json-server"
+        "use": "@vercel/static-build",
+        "config": {
+          "distDir": "api"
+        }
       }
-    ]
+    ],
+    "routes": [
+      {
+        "src": "/api/(.*)",
+        "dest": "/api/$1"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "/index.html"
+      }
+    ],
+    "env": {
+      "HOST": "0.0.0.0",
+      "PORT": 3000,
+      "JSON_SERVER_WATCH": "api/db.json"
+    },
+    "functions": { "api/**/*": true }
   }
