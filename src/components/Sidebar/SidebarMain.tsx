@@ -1,6 +1,6 @@
-import React from 'react';
-import { useDisclosure, Box, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, IconButton, useMediaQuery } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
+import { Box, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, IconButton, useDisclosure, useMediaQuery } from '@chakra-ui/react';
+import React from 'react';
 
 interface SidebarProps {
     children: React.ReactNode;

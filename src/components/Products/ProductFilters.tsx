@@ -1,5 +1,5 @@
-import { Box, Input, InputGroup, InputLeftElement, Select, Text, RangeSlider, RangeSliderTrack, RangeSliderFilledTrack, RangeSliderThumb } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
+import { Box, Input, InputGroup, InputLeftElement, RangeSlider, RangeSliderFilledTrack, RangeSliderThumb, RangeSliderTrack, Select, Text } from '@chakra-ui/react';
 
 type Props = {
   searchTerm: string;
