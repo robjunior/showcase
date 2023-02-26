@@ -1,10 +1,10 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import ProductList from "./components/Products/ProductList";
+import ProductsList from "./Pages/Products/ProductsList";
 
 function App() {
   return (
     <ChakraProvider>
-      <ProductList/>
+      <ProductsList />
     </ChakraProvider>
   );
 }
