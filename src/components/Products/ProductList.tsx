@@ -9,9 +9,12 @@ import {
     InputLeftElement,
     Select,
     Text,
+    RangeSlider,
+    RangeSliderTrack,
+    RangeSliderFilledTrack,
+    RangeSliderThumb,
 } from '@chakra-ui/react';
-import { ChevronDownIcon, SearchIcon } from '@chakra-ui/icons';
-import { RangeSlider } from '@chakra-ui/react';
+import { SearchIcon } from '@chakra-ui/icons';
 
 interface Product {
     id: number;
@@ -35,6 +38,7 @@ const ProductList = () => {
 
     useEffect(() => {
         filterProducts();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchTerm, sortOrder, priceRange]);
 
     const filterProducts = () => {
@@ -85,7 +89,13 @@ const ProductList = () => {
                 </Select>
                 <Box ml={4} w="300px">
                     <Text mb={2}>Price Range: ${priceRange[0]} - ${priceRange[1]}</Text>
-                    <RangeSlider defaultValue={priceRange} min={0} max={100} onChange={handlePriceRangeChange} />
+                    <RangeSlider defaultValue={priceRange} min={0} max={100} onChange={handlePriceRangeChange}>
+                        <RangeSliderTrack>
+                            <RangeSliderFilledTrack />
+                        </RangeSliderTrack>
+                        <RangeSliderThumb index={0} />
+                        <RangeSliderThumb index={1} />
+                    </RangeSlider>
                 </Box>
             </Flex>
             <Box>
