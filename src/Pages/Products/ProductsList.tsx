@@ -14,7 +14,7 @@ const ProductsList = () => {
     const [priceRange, setPriceRange] = useState<[number, number]>([0, 100]);
 
     useEffect(() => {
-        axios.get<Product[]>('/products').then((response) => {
+        axios.get<Product[]>('/api/products').then((response) => {
             setProducts(response.data);
             setFilteredProducts(response.data);
         });

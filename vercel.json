@@ -1,0 +1,26 @@
+{
+    "version": 2,
+    "routes": [
+      {
+        "src": "/api/.*",
+        "dest": "/api/index.js"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "/index.html"
+      }
+    ],
+    "env": {
+      "SERVER_PORT": 3001
+    },
+    "builds": [
+      {
+        "src": "api/**/*.js",
+        "use": "@vercel/node"
+      },
+      {
+        "src": "public/**/*",
+        "use": "@vercel/static"
+      }
+    ]
+  }
