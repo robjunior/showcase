@@ -15,12 +15,7 @@ import {
     RangeSliderThumb,
 } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
-
-interface Product {
-    id: number;
-    name: string;
-    price: number;
-}
+import { Product } from '../../types/Product';
 
 const ProductList = () => {
     const [products, setProducts] = useState<Product[]>([]);
