@@ -1,91 +1,109 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import {
+    Box,
+    Flex,
+    Heading,
+    Input,
+    InputGroup,
+    InputLeftElement,
+    Select,
+    Text,
+    RangeSlider,
+    RangeSliderTrack,
+    RangeSliderFilledTrack,
+    RangeSliderThumb,
+} from '@chakra-ui/react';
+import { SearchIcon } from '@chakra-ui/icons';
 import { Product } from '../../types/Product';
-interface Props { }
 
-const ProductList: React.FC<Props> = () => {
+const ProductList = () => {
     const [products, setProducts] = useState<Product[]>([]);
-    const [sortKey, setSortKey] = useState<'name' | 'price'>('name');
-    const [filterName, setFilterName] = useState<string>('');
-    const [filterMinPrice, setFilterMinPrice] = useState<number | ''>('');
-    const [filterMaxPrice, setFilterMaxPrice] = useState<number | ''>('');
+    const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+    const [priceRange, setPriceRange] = useState([0, 100]);
 
     useEffect(() => {
-        axios.get('/products')
-            .then((response) => {
-                setProducts(response.data);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+        axios.get<Product[]>('/products').then((response) => {
+            setProducts(response.data);
+            setFilteredProducts(response.data);
+        });
     }, []);
 
-    const filteredProducts = products
-        .filter((product) => product.name.toLowerCase().includes(filterName.toLowerCase()))
-        .filter((product) => filterMinPrice === '' || product.price >= filterMinPrice)
-        .filter((product) => filterMaxPrice === '' || product.price <= filterMaxPrice);
+    useEffect(() => {
+        filterProducts();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchTerm, sortOrder, priceRange]);
 
-    const sortedProducts = [...filteredProducts].sort((a, b) => {
-        if (sortKey === 'name') {
-            return a.name.localeCompare(b.name);
-        } else {
-            return a.price - b.price;
-        }
-    });
+    const filterProducts = () => {
+        let filteredProducts = products.filter((product) => {
+            return product.name.toLowerCase().includes(searchTerm.toLowerCase());
+        });
 
+        filteredProducts = filteredProducts.filter((product) => {
+            return product.price >= priceRange[0] && product.price <= priceRange[1];
+        });
+
+        filteredProducts.sort((a, b) => {
+            if (sortOrder === 'asc') {
+                return a.price - b.price;
+            } else {
+                return b.price - a.price;
+            }
+        });
+
+        setFilteredProducts(filteredProducts);
+
+    };
+
+    const handleSearchTermChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const handleSortOrderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setSortOrder(event.target.value as 'asc' | 'desc');
+    };
+
+    const handlePriceRangeChange = (value: [number, number]) => {
+        setPriceRange(value);
+    };
     return (
-        <div>
-            <div>
-                <label htmlFor="sort">Sort by:</label>
-                <select id="sort" value={sortKey} onChange={(e) => setSortKey(e.target.value as 'name' | 'price')}>
-                    <option value="name">Name</option>
-                    <option value="price">Price</option>
-                </select>
-            </div>
-            <div>
-                <label htmlFor="filter-name">Filter by name:</label>
-                <input
-                    id="filter-name"
-                    type="text"
-                    value={filterName}
-                    onChange={(e) => setFilterName(e.target.value)}
-                />
-            </div>
-            <div>
-                <label htmlFor="filter-min-price">Filter by minimum price:</label>
-                <input
-                    id="filter-min-price"
-                    type="number"
-                    value={filterMinPrice}
-                    onChange={(e) => setFilterMinPrice(e.target.value === '' ? '' : parseFloat(e.target.value))}
-                />
-            </div>
-            <div>
-                <label htmlFor="filter-max-price">Filter by maximum price:</label>
-                <input
-                    id="filter-max-price"
-                    type="number"
-                    value={filterMaxPrice}
-                    onChange={(e) => setFilterMaxPrice(e.target.value === '' ? '' : parseFloat(e.target.value))}
-                />
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {sortedProducts.map((product) => (
-                        <tr key={product.id}>
-                            <td>{product.name}</td>
-                            <td>{product.price.toFixed(2)}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+        <Box p={4}>
+            <Heading as="h1" mb={4}>
+                Product List
+            </Heading>
+            <Flex mb={4}>
+                <InputGroup>
+                    <InputLeftElement pointerEvents="none" children={<SearchIcon />} />
+                    <Input type="text" placeholder="Search" value={searchTerm} onChange={handleSearchTermChange} />
+                </InputGroup>
+                <Select ml={4} w="150px" value={sortOrder} onChange={handleSortOrderChange}>
+                    <option value="asc">Price: Low to High</option>
+                    <option value="desc">Price: High to Low</option>
+                </Select>
+                <Box ml={4} w="300px">
+                    <Text mb={2}>Price Range: ${priceRange[0]} - ${priceRange[1]}</Text>
+                    <RangeSlider defaultValue={priceRange} min={0} max={100} onChange={handlePriceRangeChange}>
+                        <RangeSliderTrack>
+                            <RangeSliderFilledTrack />
+                        </RangeSliderTrack>
+                        <RangeSliderThumb index={0} />
+                        <RangeSliderThumb index={1} />
+                    </RangeSlider>
+                </Box>
+            </Flex>
+            <Box>
+                {filteredProducts.map((product) => (
+                    <Box key={product.id} p={4} borderWidth="1px" borderRadius="lg" mb={4}>
+                        <Heading as="h2" size="md" mb={2}>
+                            {product.name}
+                        </Heading>
+                        <Text>${product.price.toFixed(2)}</Text>
+                    </Box>
+                ))}
+            </Box>
+        </Box>
     );
 };
 
