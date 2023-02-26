@@ -78,31 +78,36 @@ const ProductList = () => {
                     <InputLeftElement pointerEvents="none" children={<SearchIcon />} />
                     <Input type="text" placeholder="Search" value={searchTerm} onChange={handleSearchTermChange} />
                 </InputGroup>
-                <Select ml={4} w="150px" value={sortOrder} onChange={handleSortOrderChange}>
-                    <option value="asc">Price: Low to High</option>
-                    <option value="desc">Price: High to Low</option>
-                </Select>
-                <Box ml={4} w="300px">
-                    <Text mb={2}>Price Range: ${priceRange[0]} - ${priceRange[1]}</Text>
-                    <RangeSlider defaultValue={priceRange} min={0} max={100} onChange={handlePriceRangeChange}>
-                        <RangeSliderTrack>
-                            <RangeSliderFilledTrack />
-                        </RangeSliderTrack>
-                        <RangeSliderThumb index={0} />
-                        <RangeSliderThumb index={1} />
-                    </RangeSlider>
-                </Box>
+
+                <InputGroup>
+                    <Select ml={4} w="auto" value={sortOrder} onChange={handleSortOrderChange}>
+                        <option value="asc">Low to High</option>
+                        <option value="desc">High to Low</option>
+                    </Select>
+                </InputGroup>
+                <InputGroup>
+                    <Box ml={4} w="300px">
+                        <Text mb={2}>Price Range: R$ {priceRange[0]} - R$ {priceRange[1]}</Text>
+                        <RangeSlider defaultValue={priceRange} min={0} max={100} onChange={handlePriceRangeChange}>
+                            <RangeSliderTrack>
+                                <RangeSliderFilledTrack />
+                            </RangeSliderTrack>
+                            <RangeSliderThumb index={0} />
+                            <RangeSliderThumb index={1} />
+                        </RangeSlider>
+                    </Box>
+                </InputGroup>
             </Flex>
-            <Box>
+            <Flex>
                 {filteredProducts.map((product) => (
                     <Box key={product.id} p={4} borderWidth="1px" borderRadius="lg" mb={4}>
                         <Heading as="h2" size="md" mb={2}>
                             {product.name}
                         </Heading>
-                        <Text>${product.price.toFixed(2)}</Text>
+                        <Text>R$ {product.price.toFixed(2)}</Text>
                     </Box>
                 ))}
-            </Box>
+            </Flex>
         </Box>
     );
 };
