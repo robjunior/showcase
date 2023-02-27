@@ -10,7 +10,6 @@ const ProductGrid = ({ products }: Props) => {
         <Flex
             direction="column"
             maxW={{ xl: "1200px" }}
-            m="0 auto"
             minH="100vh"
         >
             
