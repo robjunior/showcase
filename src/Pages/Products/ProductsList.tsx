@@ -5,6 +5,7 @@ import ProductFilters from '../../components/Products/ProductFilters';
 import ProductGrid from '../../components/Products/ProductGrid';
 import Sidebar from '../../components/Sidebar/SidebarMain';
 import { Product } from '../../types/Product';
+import useDebounce from '../../utils/useDebound';
 
 const ProductsList = () => {
     const [products, setProducts] = useState<Product[]>([]);
@@ -12,6 +13,7 @@ const ProductsList = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
     const [priceRange, setPriceRange] = useState<[number, number]>([0, 100]);
+    const debouncedSearchTerm = useDebounce(searchTerm, { delay: 500 });
 
     useEffect(() => {
         axios.get<Product[]>('/api/products').then((response) => {
@@ -23,11 +25,11 @@ const ProductsList = () => {
     useEffect(() => {
         filterProducts();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchTerm, sortOrder, priceRange]);
+    }, [debouncedSearchTerm, sortOrder, priceRange]);
 
     const filterProducts = () => {
         let filteredProducts = products.filter((product) => {
-            return product.name.toLowerCase().includes(searchTerm.toLowerCase());
+            return product.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
         });
         filteredProducts = filteredProducts.filter((product) => {
             return product.price >= priceRange[0] && product.price <= priceRange[1];
